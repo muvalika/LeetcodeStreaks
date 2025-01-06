@@ -1,0 +1,26 @@
+public class MissingNumberFinder {
+
+    // Method to find the missing number in an array
+    public static int findMissingNumber(int[] nums) {
+        int n = nums.length + 1; // n is the total number of elements (1 to n)
+        
+        // Calculate the expected sum of numbers from 1 to n
+        int expectedSum = (n * (n + 1)) / 2;
+        
+        // Calculate the actual sum of the array
+        int actualSum = 0;
+        for (int num : nums) {
+            actualSum += num;
+        }
+        
+        // The difference is the missing number
+        return expectedSum - actualSum;
+    }
+
+    // Main method to test the above function
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 4, 5, 6}; // Example array with a missing number
+        int missingNumber = findMissingNumber(nums);
+        System.out.println("The missing number is: " + missingNumber); // Output: The missing number is: 3
+    }
+}
