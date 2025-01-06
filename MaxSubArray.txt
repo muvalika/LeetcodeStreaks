@@ -1,0 +1,59 @@
+class Solution {
+    public int[] maxSumOfThreeSubarrays(int[] nums, int k) {
+        int n = nums.length;
+        
+        // Calculate window sums
+        int[] sums = new int[n - k + 1];
+        int sum = 0;
+        for (int i = 0; i < k; i++) {
+            sum += nums[i];
+        }
+        sums[0] = sum;
+        for (int i = k; i < n; i++) {
+            sum = sum + nums[i] - nums[i - k];
+            sums[i - k + 1] = sum;
+        }
+        
+        // DP arrays to store the positions
+        int[] left = new int[n - k + 1];  // Best single window on the left
+        int[] right = new int[n - k + 1]; // Best single window on the right
+        
+        // Initialize left array
+        int best = 0;
+        for (int i = 0; i < sums.length; i++) {
+            if (sums[i] > sums[best]) {
+                best = i;
+            }
+            left[i] = best;
+        }
+        
+        // Initialize right array
+        best = sums.length - 1;
+        for (int i = sums.length - 1; i >= 0; i--) {
+            if (sums[i] >= sums[best]) {  // >= for lexicographically smallest
+                best = i;
+            }
+            right[i] = best;
+        }
+        
+        // Find the best combination of three windows
+        int[] ans = new int[]{-1, -1, -1};
+        int maxSum = 0;
+        
+        // Try each possible middle window
+        for (int i = k; i < n - 2 * k + 1; i++) {
+            int l = left[i - k];
+            int r = right[i + k];
+            int totalSum = sums[l] + sums[i] + sums[r];
+            
+            if (ans[0] == -1 || totalSum > maxSum) {
+                maxSum = totalSum;
+                ans[0] = l;
+                ans[1] = i;
+                ans[2] = r;
+            }
+        }
+        
+        return ans;
+    }
+}
