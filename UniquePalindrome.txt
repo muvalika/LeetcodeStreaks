@@ -1,0 +1,43 @@
+import java.util.HashSet;
+import java.util.Set;
+
+public class Solution {
+    public int countPalindromicSubsequence(String s) {
+        int n = s.length();
+        // Store the first and last occurrence of each character
+        int[] firstOccurrence = new int[26];
+        int[] lastOccurrence = new int[26];
+        
+        for (int i = 0; i < 26; i++) {
+            firstOccurrence[i] = -1;
+            lastOccurrence[i] = -1;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            int index = s.charAt(i) - 'a';
+            if (firstOccurrence[index] == -1) {
+                firstOccurrence[index] = i;
+            }
+            lastOccurrence[index] = i;
+        }
+        
+        // Set to store unique palindromic subsequences
+        Set<String> uniquePalindromes = new HashSet<>();
+        
+        // Iterate over all characters as the middle character
+        for (int i = 1; i < n - 1; i++) { // Middle character can't be at the first or last position
+            char middleChar = s.charAt(i);
+            int middleIndex = middleChar - 'a';
+            
+            // Check characters on the left and right of the middle character
+            for (int c = 0; c < 26; c++) {
+                if (firstOccurrence[c] != -1 && firstOccurrence[c] < i && lastOccurrence[c] > i) {
+                    String palindrome = "" + (char) (c + 'a') + middleChar + (char) (c + 'a');
+                    uniquePalindromes.add(palindrome);
+                }
+            }
+        }
+        
+        return uniquePalindromes.size();
+    }
+}
