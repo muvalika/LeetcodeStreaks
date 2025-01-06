@@ -1,0 +1,29 @@
+public class Solution {
+    public String shiftingLetters(String s, int[][] shifts) {
+        int n = s.length();
+        int[] shiftArray = new int[n + 1]; // Difference array for efficient range updates
+
+        // Apply shifts using the difference array technique
+        for (int[] shift : shifts) {
+            int start = shift[0];
+            int end = shift[1];
+            int direction = shift[2];
+
+            // Update the difference array
+            shiftArray[start] += (direction == 1) ? 1 : -1;
+            shiftArray[end + 1] -= (direction == 1) ? 1 : -1;
+        }
+
+        // Compute the final shifts for each character
+        int accumulatedShift = 0;
+        char[] result = s.toCharArray();
+        for (int i = 0; i < n; i++) {
+            accumulatedShift += shiftArray[i];
+            // Calculate the net shift, considering wrapping around the alphabet
+            int netShift = (accumulatedShift % 26 + 26) % 26;
+            result[i] = (char) ('a' + (result[i] - 'a' + netShift) % 26);
+        }
+
+        return new String(result);
+    }
+}
