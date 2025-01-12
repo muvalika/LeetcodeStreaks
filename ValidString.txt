@@ -1,0 +1,58 @@
+public class Solution {
+    public boolean canBeValid(String s, String locked) {
+        // If the length of s is odd, it's impossible to balance
+        if (s.length() % 2 != 0) {
+            return false;
+        }
+
+        // Forward check to ensure no excess closing parentheses
+        int openCount = 0;  // Count of '('
+        int flexCount = 0;  // Count of flexible positions
+        for (int i = 0; i < s.length(); i++) {
+            if (locked.charAt(i) == '0') {
+                flexCount++;  // Flexible position
+            } else if (s.charAt(i) == '(') {
+                openCount++;  // Fixed '('
+            } else {  // Fixed ')'
+                if (openCount > 0) {
+                    openCount--;  // Balance with an open '('
+                } else if (flexCount > 0) {
+                    flexCount--;  // Use a flexible position to balance
+                } else {
+                    return false;  // Too many closing parentheses
+                }
+            }
+        }
+
+        // Backward check to ensure no excess opening parentheses
+        int closeCount = 0;  // Count of ')'
+        flexCount = 0;  // Reset the flexible position counter
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (locked.charAt(i) == '0') {
+                flexCount++;  // Flexible position
+            } else if (s.charAt(i) == ')') {
+                closeCount++;  // Fixed ')'
+            } else {  // Fixed '('
+                if (closeCount > 0) {
+                    closeCount--;  // Balance with a close ')'
+                } else if (flexCount > 0) {
+                    flexCount--;  // Use a flexible position to balance
+                } else {
+                    return false;  // Too many opening parentheses
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+
+        // Test cases
+        System.out.println(solution.canBeValid("))(((", "01001"));  // Output: true
+        System.out.println(solution.canBeValid("())", "100"));      // Output: false
+        System.out.println(solution.canBeValid("()", "11"));        // Output: true
+    }
+}
+
