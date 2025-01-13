@@ -1,0 +1,51 @@
+class Solution {
+    public int minimumLength(String s) {
+        // Convert string to character array for easier manipulation
+        char[] chars = s.toCharArray();
+        // Use boolean array to mark deleted positions
+        boolean[] deleted = new boolean[chars.length];
+        boolean canDelete = true;
+        
+        while (canDelete) {
+            canDelete = false;
+            
+            // Try each index as the center
+            for (int i = 0; i < chars.length; i++) {
+                if (deleted[i]) continue;
+                
+                // Find closest left character that matches
+                int left = -1;
+                for (int j = i - 1; j >= 0; j--) {
+                    if (!deleted[j] && chars[j] == chars[i]) {
+                        left = j;
+                        break;
+                    }
+                }
+                
+                // Find closest right character that matches
+                int right = -1;
+                for (int j = i + 1; j < chars.length; j++) {
+                    if (!deleted[j] && chars[j] == chars[i]) {
+                        right = j;
+                        break;
+                    }
+                }
+                
+                // If we found both left and right matches
+                if (left != -1 && right != -1) {
+                    deleted[left] = true;
+                    deleted[right] = true;
+                    canDelete = true;
+                }
+            }
+        }
+        
+        // Count remaining characters
+        int remaining = 0;
+        for (boolean isDeleted : deleted) {
+            if (!isDeleted) remaining++;
+        }
+        
+        return remaining;
+    }
+}
