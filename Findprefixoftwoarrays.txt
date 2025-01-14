@@ -1,0 +1,30 @@
+class Solution {
+    public int[] findThePrefixCommonArray(int[] A, int[] B) {
+        int n = A.length;
+        int[] C = new int[n];
+
+        // Sets to keep track of elements seen so far in A and B
+        Set<Integer> seenInA = new HashSet<>();
+        Set<Integer> seenInB = new HashSet<>();
+
+        int commonCount = 0;
+
+        for (int i = 0; i < n; i++) {
+            // Add current elements of A and B to their respective sets
+            if (seenInB.contains(A[i])) {
+                commonCount++;
+            }
+            seenInA.add(A[i]);
+
+            if (seenInA.contains(B[i])) {
+                commonCount++;
+            }
+            seenInB.add(B[i]);
+
+            // Update the prefix common count
+            C[i] = commonCount;
+        }
+
+        return C;
+    }
+}
