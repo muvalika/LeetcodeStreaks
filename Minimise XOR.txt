@@ -1,0 +1,27 @@
+public class Solution {
+    public int minimizeXor(int num1, int num2) {
+        // Step 1: Count the number of set bits in num2
+        int setBitsNum2 = Integer.bitCount(num2);
+
+        // Step 2: Create x with the same number of set bits as num2
+        int x = 0;
+        
+        // Step 3: Set bits in x to minimize x XOR num1
+        for (int i = 31; i >= 0 && setBitsNum2 > 0; i--) {
+            if ((num1 & (1 << i)) != 0) {
+                x |= (1 << i);
+                setBitsNum2--;
+            }
+        }
+
+        // Step 4: If there are still set bits remaining, fill x from least significant bit
+        for (int i = 0; i <= 31 && setBitsNum2 > 0; i++) {
+            if ((x & (1 << i)) == 0) {
+                x |= (1 << i);
+                setBitsNum2--;
+            }
+        }
+
+        return x;
+    }
+}
