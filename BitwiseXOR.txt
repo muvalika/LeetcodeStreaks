@@ -1,0 +1,44 @@
+class Solution {
+    public int xorAllNums(int[] nums1, int[] nums2) {
+        int xor1 = 0, xor2 = 0;
+
+        // Calculate XOR of all elements in nums1
+        for (int num : nums1) {
+            xor1 ^= num;
+        }
+
+        // Calculate XOR of all elements in nums2
+        for (int num : nums2) {
+            xor2 ^= num;
+        }
+
+        // Determine the result
+        int result = 0;
+
+        // If nums2.length is odd, XOR with xor1
+        if (nums2.length % 2 == 1) {
+            result ^= xor1;
+        }
+
+        // If nums1.length is odd, XOR with xor2
+        if (nums1.length % 2 == 1) {
+            result ^= xor2;
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+
+        // Test Case 1
+        int[] nums1 = {2, 1, 3};
+        int[] nums2 = {10, 2, 5, 0};
+        System.out.println("Output: " + solution.xorAllNums(nums1, nums2)); // Output: 13
+
+        // Test Case 2
+        int[] nums3 = {1, 2};
+        int[] nums4 = {3, 4};
+        System.out.println("Output: " + solution.xorAllNums(nums3, nums4)); // Output: 0
+    }
+}
