@@ -1,0 +1,38 @@
+public class Solution {
+    public boolean doesValidArrayExist(int[] derived) {
+        int n = derived.length;
+
+        // Try with original[0] = 0
+        if (isValidOriginal(derived, 0)) return true;
+
+        // Try with original[0] = 1
+        if (isValidOriginal(derived, 1)) return true;
+
+        // If neither works, return false
+        return false;
+    }
+
+    private boolean isValidOriginal(int[] derived, int firstValue) {
+        int n = derived.length;
+        int[] original = new int[n];
+        original[0] = firstValue;
+
+        // Reconstruct the original array
+        for (int i = 1; i < n; i++) {
+            original[i] = derived[i - 1] ^ original[i - 1];
+        }
+
+        // Check if the cyclic condition holds
+        return (original[n - 1] ^ original[0]) == derived[n - 1];
+    }
+
+    public static void main(String[] args) {
+        Solution solver = new Solution();
+
+        int[] derived1 = {1, 1, 0};
+        System.out.println(solver.doesValidArrayExist(derived1)); // Output: true
+
+        int[] derived2 = {1, 1, 1};
+        System.out.println(solver.doesValidArrayExist(derived2)); // Output: false
+    }
+}
