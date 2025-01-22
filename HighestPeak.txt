@@ -1,0 +1,63 @@
+import java.util.*;
+
+public class Solution {
+    public int[][] highestPeak(int[][] isWater) {
+        int m = isWater.length, n = isWater[0].length;
+        int[][] height = new int[m][n];
+        Queue<int[]> queue = new LinkedList<>();
+        
+        // Initialize the height matrix and enqueue all water cells
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (isWater[i][j] == 1) {
+                    height[i][j] = 0;
+                    queue.offer(new int[]{i, j});
+                } else {
+                    height[i][j] = -1; // Mark land cells as unvisited
+                }
+            }
+        }
+        
+        // Directions for moving north, east, south, west
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        
+        // Perform BFS from all water cells
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int x = cell[0], y = cell[1];
+            
+            for (int[] dir : directions) {
+                int newX = x + dir[0];
+                int newY = y + dir[1];
+                
+                // If the new cell is within bounds and unvisited
+                if (newX >= 0 && newX < m && newY >= 0 && newY < n && height[newX][newY] == -1) {
+                    height[newX][newY] = height[x][y] + 1; // Set height
+                    queue.offer(new int[]{newX, newY});
+                }
+            }
+        }
+        
+        return height;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Example 1
+        int[][] isWater1 = {{0, 1}, {0, 0}};
+        int[][] result1 = solution.highestPeak(isWater1);
+        System.out.println("Example 1:");
+        for (int[] row : result1) {
+            System.out.println(Arrays.toString(row));
+        }
+        
+        // Example 2
+        int[][] isWater2 = {{0, 0, 1}, {1, 0, 0}, {0, 0, 0}};
+        int[][] result2 = solution.highestPeak(isWater2);
+        System.out.println("Example 2:");
+        for (int[] row : result2) {
+            System.out.println(Arrays.toString(row));
+        }
+    }
+}
