@@ -1,0 +1,51 @@
+import java.util.*;
+
+public class Solution {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        int n = graph.length;
+
+        // Step 1: Create the reversed graph
+        List<List<Integer>> reversedGraph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            reversedGraph.add(new ArrayList<>());
+        }
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (int neighbor : graph[i]) {
+                reversedGraph.get(neighbor).add(i);
+                indegree[i]++;
+            }
+        }
+
+        // Step 2: Initialize a queue with terminal nodes (indegree 0)
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        // Step 3: Perform BFS to find all safe nodes
+        boolean[] safe = new boolean[n];
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            safe[node] = true; // Mark as safe
+            for (int neighbor : reversedGraph.get(node)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+
+        // Step 4: Collect all safe nodes and sort them
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (safe[i]) {
+                result.add(i);
+            }
+        }
+
+        return result;
+    }
+}
