@@ -1,0 +1,53 @@
+class Solution {
+    public int[] lexicographicallySmallestArray(int[] nums, int limit) {
+        int n = nums.length;
+        
+        // Create pairs of (value, original index)
+        int[][] pairs = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            pairs[i] = new int[]{nums[i], i};
+        }
+        
+        // Sort pairs by value
+        Arrays.sort(pairs, (a, b) -> Integer.compare(a[0], b[0]));
+        
+        // Group indices that can be swapped
+        List<List<Integer>> groups = new ArrayList<>();
+        List<Integer> currentGroup = new ArrayList<>();
+        
+        for (int i = 0; i < n - 1; i++) {
+            currentGroup.add(pairs[i][1]);
+            
+            // Check if next pair can be in the same group
+            if (pairs[i+1][0] - pairs[i][0] > limit) {
+                groups.add(currentGroup);
+                currentGroup = new ArrayList<>();
+            }
+        }
+        
+        // Add last group
+        currentGroup.add(pairs[n-1][1]);
+        groups.add(currentGroup);
+        
+        // Sort indexes within each group
+        int[] result = new int[n];
+        int index = 0;
+        
+        for (List<Integer> group : groups) {
+            // Sort original values of this group
+            List<Integer> values = group.stream()
+                .map(idx -> nums[idx])
+                .sorted()
+                .collect(Collectors.toList());
+            
+            // Rearrange group's indexes to match sorted values
+            Collections.sort(group);
+            
+            for (int i = 0; i < group.size(); i++) {
+                result[group.get(i)] = values.get(i);
+            }
+        }
+        
+        return result;
+    }
+}
