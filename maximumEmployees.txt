@@ -1,0 +1,70 @@
+class Solution {
+    public int maximumInvitations(int[] favorite) {
+        int n = favorite.length;
+        
+        // Find cycles and cycle lengths
+        boolean[] visited = new boolean[n];
+        int[] cycleLength = new int[n];
+        List<List<Integer>> graph = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        // Build reverse graph and track cycles
+        for (int i = 0; i < n; i++) {
+            graph.get(favorite[i]).add(i);
+        }
+        
+        // Find max cycle and max two-node cycle total
+        int maxCycle = 0;
+        int maxTwoCycleTotal = 0;
+        
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                List<Integer> path = new ArrayList<>();
+                int current = i;
+                
+                // Detect cycle
+                while (!visited[current]) {
+                    visited[current] = true;
+                    path.add(current);
+                    current = favorite[current];
+                }
+                
+                // Check if cycle found
+                int cycleStart = path.indexOf(current);
+                if (cycleStart != -1) {
+                    int currCycleLength = path.size() - cycleStart;
+                    
+                    // Large cycle case
+                    if (currCycleLength > 2) {
+                        maxCycle = Math.max(maxCycle, currCycleLength);
+                    } 
+                    // Two-node cycle case
+                    else if (currCycleLength == 2) {
+                        // Calculate max possible length for two-node cycle
+                        int a = path.get(path.size() - 2);
+                        int b = path.get(path.size() - 1);
+                        int chainLengthA = getChainLength(graph, a, b);
+                        int chainLengthB = getChainLength(graph, b, a);
+                        maxTwoCycleTotal += chainLengthA + chainLengthB + 2;
+                    }
+                }
+            }
+        }
+        
+        // Return max of large cycle or two-node cycle total
+        return Math.max(maxCycle, maxTwoCycleTotal);
+    }
+    
+    // Get max chain length for two-node cycle
+    private int getChainLength(List<List<Integer>> graph, int start, int exclude) {
+        int maxChain = 0;
+        for (int next : graph.get(start)) {
+            if (next != exclude) {
+                maxChain = Math.max(maxChain, 1 + getChainLength(graph, next, start));
+            }
+        }
+        return maxChain;
+    }
+}
