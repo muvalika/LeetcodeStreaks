@@ -1,0 +1,28 @@
+class Solution {
+    public List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        // Create adjacency matrix
+        boolean[][] graph = new boolean[numCourses][numCourses];
+        
+        // Fill prerequisites
+        for (int[] pre : prerequisites) {
+            graph[pre[0]][pre[1]] = true;
+        }
+        
+        // Floyd-Warshall algorithm
+        for (int k = 0; k < numCourses; k++) {
+            for (int i = 0; i < numCourses; i++) {
+                for (int j = 0; j < numCourses; j++) {
+                    graph[i][j] = graph[i][j] || (graph[i][k] && graph[k][j]);
+                }
+            }
+        }
+        
+        // Process queries
+        List<Boolean> result = new ArrayList<>();
+        for (int[] query : queries) {
+            result.add(graph[query[0]][query[1]]);
+        }
+        
+        return result;
+    }
+}
