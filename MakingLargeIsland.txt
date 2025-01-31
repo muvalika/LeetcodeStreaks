@@ -1,0 +1,89 @@
+class Solution {
+    class UnionFind {
+        int[] parent;
+        int[] size;
+        
+        UnionFind(int n) {
+            parent = new int[n];
+            size = new int[n];
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+                size[i] = 1;
+            }
+        }
+        
+        int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+        
+        void union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            if (rootX != rootY) {
+                parent[rootX] = rootY;
+                size[rootY] += size[rootX];
+            }
+        }
+        
+        int getSize(int x) {
+            return size[find(x)];
+        }
+    }
+    
+    public int largestIsland(int[][] grid) {
+        int n = grid.length;
+        UnionFind uf = new UnionFind(n * n);
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+        
+        // First pass: unite all existing islands
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    for (int k = 0; k < 4; k++) {
+                        int ni = i + dx[k];
+                        int nj = j + dy[k];
+                        if (ni >= 0 && ni < n && nj >= 0 && nj < n && grid[ni][nj] == 1) {
+                            uf.union(i * n + j, ni * n + nj);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Find the maximum existing island size
+        int maxSize = 0;
+        for (int i = 0; i < n * n; i++) {
+            maxSize = Math.max(maxSize, uf.getSize(i));
+        }
+        
+        // Try changing each 0 to 1 and check resulting island size
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    Set<Integer> neighborRoots = new HashSet<>();
+                    int size = 1;  // Start with size 1 for the cell we're changing
+                    
+                    // Check all adjacent cells
+                    for (int k = 0; k < 4; k++) {
+                        int ni = i + dx[k];
+                        int nj = j + dy[k];
+                        if (ni >= 0 && ni < n && nj >= 0 && nj < n && grid[ni][nj] == 1) {
+                            int root = uf.find(ni * n + nj);
+                            if (!neighborRoots.contains(root)) {
+                                neighborRoots.add(root);
+                                size += uf.getSize(root);
+                            }
+                        }
+                    }
+                    maxSize = Math.max(maxSize, size);
+                }
+            }
+        }
+        
+        return maxSize;
+    }
+}
