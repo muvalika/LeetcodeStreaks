@@ -1,0 +1,54 @@
+class Solution {
+    public boolean areAlmostEqual(String s1, String s2) {
+        // If strings are equal, no swap needed
+        if (s1.equals(s2)) {
+            return true;
+        }
+        
+        // If lengths are different, return false
+        if (s1.length() != s2.length()) {
+            return false;
+        }
+        
+        // Find differing positions
+        int firstDiff = -1;
+        int secondDiff = -1;
+        int diffCount = 0;
+        
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) != s2.charAt(i)) {
+                diffCount++;
+                if (diffCount > 2) {
+                    return false;  // More than 2 differences means impossible with one swap
+                }
+                if (firstDiff == -1) {
+                    firstDiff = i;
+                } else {
+                    secondDiff = i;
+                }
+            }
+        }
+        
+        // Check if exactly two differences were found and characters can be swapped
+        return diffCount == 2 && 
+               s1.charAt(firstDiff) == s2.charAt(secondDiff) && 
+               s1.charAt(secondDiff) == s2.charAt(firstDiff);
+    }
+    
+    // Test method to verify solution
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Test case 1: "bank", "kanb"
+        System.out.println("Test 1: " + solution.areAlmostEqual("bank", "kanb")); // Expected: true
+        
+        // Test case 2: "attack", "defend"
+        System.out.println("Test 2: " + solution.areAlmostEqual("attack", "defend")); // Expected: false
+        
+        // Test case 3: "kelb", "kelb"
+        System.out.println("Test 3: " + solution.areAlmostEqual("kelb", "kelb")); // Expected: true
+        
+        // Additional test case: "abcd", "abdc"
+        System.out.println("Test 4: " + solution.areAlmostEqual("abcd", "abdc")); // Expected: true
+    }
+}
