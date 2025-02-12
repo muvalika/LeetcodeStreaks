@@ -1,0 +1,53 @@
+class Solution {
+    public int longestMonotonicSubarray(int[] nums) {
+        int maxLength = 1;
+        int currentIncreasingLength = 1;
+        int currentDecreasingLength = 1;
+        
+        // Handle edge case of single element array
+        if (nums.length == 1) {
+            return 1;
+        }
+        
+        // Iterate through array checking both increasing and decreasing sequences
+        for (int i = 1; i < nums.length; i++) {
+            // Check increasing sequence
+            if (nums[i] > nums[i-1]) {
+                currentIncreasingLength++;
+                currentDecreasingLength = 1;
+            }
+            // Check decreasing sequence
+            else if (nums[i] < nums[i-1]) {
+                currentDecreasingLength++;
+                currentIncreasingLength = 1;
+            }
+            // If equal, reset both counters
+            else {
+                currentIncreasingLength = 1;
+                currentDecreasingLength = 1;
+            }
+            
+            // Update maxLength if either current length is greater
+            maxLength = Math.max(maxLength, Math.max(currentIncreasingLength, currentDecreasingLength));
+        }
+        
+        return maxLength;
+    }
+
+    // Test method to verify solution
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Test case 1: [1,4,3,3,2]
+        int[] test1 = {1,4,3,3,2};
+        System.out.println("Test 1: " + solution.longestMonotonicSubarray(test1)); // Expected: 2
+        
+        // Test case 2: [3,3,3,3]
+        int[] test2 = {3,3,3,3};
+        System.out.println("Test 2: " + solution.longestMonotonicSubarray(test2)); // Expected: 1
+        
+        // Test case 3: [3,2,1]
+        int[] test3 = {3,2,1};
+        System.out.println("Test 3: " + solution.longestMonotonicSubarray(test3)); // Expected: 3
+    }
+}
