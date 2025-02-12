@@ -1,0 +1,39 @@
+import java.util.HashMap;
+
+public class Solution {
+    public int maximumSum(int[] nums) {
+        // HashMap to store the max value for each digit sum
+        HashMap<Integer, Integer> digitSumMap = new HashMap<>();
+        int maxSum = -1;
+
+        for (int num : nums) {
+            // Calculate the sum of digits
+            int digitSum = getDigitSum(num);
+
+            // Check if a number with the same digit sum already exists
+            if (digitSumMap.containsKey(digitSum)) {
+                // Calculate the pair sum
+                int pairSum = digitSumMap.get(digitSum) + num;
+                // Update the max sum
+                maxSum = Math.max(maxSum, pairSum);
+                // Update the max value for the current digit sum
+                digitSumMap.put(digitSum, Math.max(digitSumMap.get(digitSum), num));
+            } else {
+                // Add the digit sum and number to the map
+                digitSumMap.put(digitSum, num);
+            }
+        }
+
+        return maxSum;
+    }
+
+    // Helper function to calculate the sum of digits of a number
+    private int getDigitSum(int num) {
+        int sum = 0;
+        while (num > 0) {
+            sum += num % 10;
+            num /= 10;
+        }
+        return sum;
+    }
+}
