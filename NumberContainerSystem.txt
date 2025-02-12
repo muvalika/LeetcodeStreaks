@@ -1,0 +1,60 @@
+class NumberContainers {
+    // Map to store index -> number mapping
+    private Map<Integer, Integer> indexToNum;
+    // Map to store number -> TreeSet of indices mapping
+    private Map<Integer, TreeSet<Integer>> numToIndices;
+    
+    public NumberContainers() {
+        indexToNum = new HashMap<>();
+        numToIndices = new HashMap<>();
+    }
+    
+    public void change(int index, int number) {
+        // If index already contains a number, remove it from old number's indices
+        if (indexToNum.containsKey(index)) {
+            int oldNum = indexToNum.get(index);
+            numToIndices.get(oldNum).remove(index);
+            // If no more indices for this number, remove the entry
+            if (numToIndices.get(oldNum).isEmpty()) {
+                numToIndices.remove(oldNum);
+            }
+        }
+        
+        // Update index -> number mapping
+        indexToNum.put(index, number);
+        
+        // Update number -> indices mapping
+        numToIndices.computeIfAbsent(number, k -> new TreeSet<>()).add(index);
+    }
+    
+    public int find(int number) {
+        // If number exists in the system, return its smallest index
+        if (numToIndices.containsKey(number) && !numToIndices.get(number).isEmpty()) {
+            return numToIndices.get(number).first();
+        }
+        return -1;
+    }
+
+    // Test method
+    public static void main(String[] args) {
+        NumberContainers nc = new NumberContainers();
+        
+        // Test case from example
+        System.out.println(nc.find(10));  // Expected: -1
+        nc.change(2, 10);
+        nc.change(1, 10);
+        nc.change(3, 10);
+        nc.change(5, 10);
+        System.out.println(nc.find(10));  // Expected: 1
+        nc.change(1, 20);
+        System.out.println(nc.find(10));  // Expected: 2
+        
+        // Additional test cases
+        NumberContainers nc2 = new NumberContainers();
+        nc2.change(1, 10);
+        System.out.println(nc2.find(10));  // Expected: 1
+        nc2.change(1, 20);
+        System.out.println(nc2.find(10));  // Expected: -1
+        System.out.println(nc2.find(20));  // Expected: 1
+    }
+}
