@@ -1,0 +1,26 @@
+class Solution {
+    public String mergeAlternately(String word1, String word2) {
+        // Use StringBuilder for efficient string concatenation
+        StringBuilder result = new StringBuilder();
+        
+        // Get lengths of both strings
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int maxLength = Math.max(len1, len2);
+        
+        // Merge characters alternately
+        for (int i = 0; i < maxLength; i++) {
+            // Add character from word1 if available
+            if (i < len1) {
+                result.append(word1.charAt(i));
+            }
+            
+            // Add character from word2 if available
+            if (i < len2) {
+                result.append(word2.charAt(i));
+            }
+        }
+        
+        return result.toString();
+    }
+}
