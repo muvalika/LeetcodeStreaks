@@ -1,0 +1,37 @@
+class Solution {
+    public void sortColors(int[] nums) {
+        // Initialize three pointers
+        int low = 0;        // for 0's (red)
+        int mid = 0;        // for 1's (white)
+        int high = nums.length - 1;   // for 2's (blue)
+        
+        // One-pass algorithm using Dutch National Flag partitioning
+        while (mid <= high) {
+            switch (nums[mid]) {
+                case 0: // Red
+                    // Swap with low pointer and move both low and mid forward
+                    swap(nums, low, mid);
+                    low++;
+                    mid++;
+                    break;
+                    
+                case 1: // White
+                    // Just move mid pointer forward
+                    mid++;
+                    break;
+                    
+                case 2: // Blue
+                    // Swap with high pointer and move high backward
+                    swap(nums, mid, high);
+                    high--;
+                    break;
+            }
+        }
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
