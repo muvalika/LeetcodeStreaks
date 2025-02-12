@@ -1,0 +1,35 @@
+import java.util.*;
+
+public class Solution {
+    public int tupleSameProduct(int[] nums) {
+        Map<Integer, Integer> productCount = new HashMap<>();
+        int count = 0;
+        
+        // Iterate through all pairs (i, j)
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                int product = nums[i] * nums[j];
+                
+                // If the product already exists in the map, count the possible tuples
+                if (productCount.containsKey(product)) {
+                    count += productCount.get(product) * 8; // Each pair contributes 8 permutations
+                }
+                
+                // Update product count in the map
+                productCount.put(product, productCount.getOrDefault(product, 0) + 1);
+            }
+        }
+        
+        return count;
+    }
+    
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        int[] nums1 = {2, 3, 4, 6};
+        System.out.println(solution.tupleSameProduct(nums1)); // Output: 8
+        
+        int[] nums2 = {1, 2, 4, 5, 10};
+        System.out.println(solution.tupleSameProduct(nums2)); // Output: 16
+    }
+}
