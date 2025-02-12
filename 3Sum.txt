@@ -1,0 +1,58 @@
+class Solution {
+    public int threeSumClosest(int[] nums, int target) {
+        // Sort array to use two-pointer technique
+        Arrays.sort(nums);
+        
+        // Initialize closest sum with first three elements
+        int closestSum = nums[0] + nums[1] + nums[2];
+        
+        // Fix first element and use two pointers for remaining elements
+        for (int i = 0; i < nums.length - 2; i++) {
+            int left = i + 1;
+            int right = nums.length - 1;
+            
+            while (left < right) {
+                int currentSum = nums[i] + nums[left] + nums[right];
+                
+                // If exact match found, return target
+                if (currentSum == target) {
+                    return target;
+                }
+                
+                // Update closest sum if current sum is closer to target
+                if (Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
+                    closestSum = currentSum;
+                }
+                
+                // Adjust pointers based on comparison with target
+                if (currentSum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return closestSum;
+    }
+
+    // Test method
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Test case 1: [-1,2,1,-4], target = 1
+        int[] test1 = {-1,2,1,-4};
+        System.out.println("Test 1: " + solution.threeSumClosest(test1, 1));
+        // Expected: 2
+        
+        // Test case 2: [0,0,0], target = 1
+        int[] test2 = {0,0,0};
+        System.out.println("Test 2: " + solution.threeSumClosest(test2, 1));
+        // Expected: 0
+        
+        // Additional test case
+        int[] test3 = {1,1,1,0}, target3 = 100;
+        System.out.println("Test 3: " + solution.threeSumClosest(test3, target3));
+        // Expected: 3
+    }
+}
