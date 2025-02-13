@@ -1,0 +1,34 @@
+import java.util.PriorityQueue;
+
+class Solution {
+    public int minOperations(int[] nums, int k) {
+        // Use a min heap to efficiently get the two smallest elements
+        PriorityQueue<Long> pq = new PriorityQueue<>();
+        
+        // Add all numbers to the priority queue
+        for (int num : nums) {
+            pq.offer((long) num);
+        }
+        
+        int operations = 0;
+        
+        // Continue while we have at least 2 elements and the smallest is less than k
+        while (pq.size() >= 2 && pq.peek() < k) {
+            // Get the two smallest numbers
+            long x = pq.poll();
+            long y = pq.poll();
+            
+            // Calculate new value according to the formula
+            long newValue = Math.min(x, y) * 2 + Math.max(x, y);
+            
+            // Add the new value back to the queue
+            pq.offer(newValue);
+            
+            operations++;
+        }
+        
+        // If all elements are >= k, return the number of operations
+        // Otherwise, return -1 (though problem states solution always exists)
+        return pq.peek() >= k ? operations : -1;
+    }
+}
