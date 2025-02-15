@@ -1,0 +1,45 @@
+class Solution {
+    public int punishmentNumber(int n) {
+        int sum = 0;
+        // Check each number from 1 to n
+        for (int i = 1; i <= n; i++) {
+            int square = i * i;
+            // If we can partition square into parts summing to i
+            if (canPartition(String.valueOf(square), 0, i)) {
+                sum += square;
+            }
+        }
+        return sum;
+    }
+    
+    private boolean canPartition(String num, int start, int target) {
+        // Base case: if we've processed the entire string
+        if (start == num.length()) {
+            return target == 0;
+        }
+        
+        // Try all possible partitions from current position
+        for (int i = start; i < num.length(); i++) {
+            // Skip leading zeros unless it's a single '0'
+            if (start != i && num.charAt(start) == '0') {
+                continue;
+            }
+            
+            // Get current partition value
+            int value = Integer.parseInt(num.substring(start, i + 1));
+            
+            // If current value is too large, no need to continue
+            if (value > target) {
+                break;
+            }
+            
+            // Recursively check if remaining string can be partitioned
+            // to sum up to (target - value)
+            if (canPartition(num, i + 1, target - value)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}
