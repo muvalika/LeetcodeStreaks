@@ -1,0 +1,30 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class Solution {
+    public int longestPalindrome(String[] words) {
+        Map<String, Integer> map = new HashMap<>();
+        int length = 0;
+        boolean centralPalindromeUsed = false;
+
+        for (String word : words) {
+            String reversed = new StringBuilder(word).reverse().toString();
+            if (map.getOrDefault(reversed, 0) > 0) {
+                length += 4;  // pair makes 4-letter palindrome
+                map.put(reversed, map.get(reversed) - 1);
+            } else {
+                map.put(word, map.getOrDefault(word, 0) + 1);
+            }
+        }
+
+        // Check if we can use a central palindromic word like "gg"
+        for (String word : map.keySet()) {
+            if (word.charAt(0) == word.charAt(1) && map.get(word) > 0) {
+                length += 2;  // Only one can be in the center
+                break;
+            }
+        }
+
+        return length;
+    }
+}
