@@ -1,0 +1,127 @@
+// Java Solution
+import java.util.*;
+
+class Solution {
+    public int[] maxTargetNodes(int[][] edges1, int[][] edges2) {
+        int n = edges1.length + 1;
+        int m = edges2.length + 1;
+        
+        // Build adjacency lists for both trees
+        List<List<Integer>> graph1 = buildGraph(edges1, n);
+        List<List<Integer>> graph2 = buildGraph(edges2, m);
+        
+        // Pre-calculate: for each node in tree2, count even/odd distance nodes
+        int[] maxEvenTree2 = new int[1];
+        int[] maxOddTree2 = new int[1];
+        calculateTree2Stats(graph2, m, maxEvenTree2, maxOddTree2);
+        
+        int[] result = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            // Calculate distances from node i to all nodes in tree1
+            int[] distances1 = calculateDistances(graph1, i);
+            
+            // Count target nodes in tree1 (even distance from i)
+            int tree1Targets = 0;
+            for (int d : distances1) {
+                if (d % 2 == 0) tree1Targets++;
+            }
+            
+            // For tree2 connection: find optimal connection
+            int maxTree2Contribution = 0;
+            
+            for (int a = 0; a < n; a++) {
+                int distIToA = distances1[a];
+                // Total distance parity when going through connection a -> tree2
+                int connectionParity = (distIToA + 1) % 2;
+                
+                int contribution;
+                if (connectionParity == 0) {
+                    contribution = maxEvenTree2[0];
+                } else {
+                    contribution = maxOddTree2[0];
+                }
+                
+                maxTree2Contribution = Math.max(maxTree2Contribution, contribution);
+            }
+            
+            result[i] = tree1Targets + maxTree2Contribution;
+        }
+        
+        return result;
+    }
+    
+    private List<List<Integer>> buildGraph(int[][] edges, int numNodes) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numNodes; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        
+        return graph;
+    }
+    
+    private int[] calculateDistances(List<List<Integer>> graph, int source) {
+        int n = graph.size();
+        int[] distances = new int[n];
+        Arrays.fill(distances, -1);
+        distances[source] = 0;
+        
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(source);
+        
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            for (int neighbor : graph.get(node)) {
+                if (distances[neighbor] == -1) {
+                    distances[neighbor] = distances[node] + 1;
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        
+        return distances;
+    }
+    
+    private void calculateTree2Stats(List<List<Integer>> graph2, int m, 
+                                   int[] maxEven, int[] maxOdd) {
+        maxEven[0] = 0;
+        maxOdd[0] = 0;
+        
+        for (int i = 0; i < m; i++) {
+            int[] distances = calculateDistances(graph2, i);
+            int evenCount = 0, oddCount = 0;
+            
+            for (int d : distances) {
+                if (d % 2 == 0) evenCount++;
+                else oddCount++;
+            }
+            
+            maxEven[0] = Math.max(maxEven[0], evenCount);
+            maxOdd[0] = Math.max(maxOdd[0], oddCount);
+        }
+    }
+    
+    // Test method
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Example 1
+        int[][] edges1 = {{0,1},{0,2},{2,3},{2,4}};
+        int[][] edges2 = {{0,1},{0,2},{0,3},{2,7},{1,4},{4,5},{4,6}};
+        int[] result1 = solution.maxTargetNodes(edges1, edges2);
+        System.out.println("Example 1: " + Arrays.toString(result1));
+        System.out.println("Expected: [8,7,7,8,8]");
+        
+        // Example 2
+        int[][] edges1_2 = {{0,1},{0,2},{0,3},{0,4}};
+        int[][] edges2_2 = {{0,1},{1,2},{2,3}};
+        int[] result2 = solution.maxTargetNodes(edges1_2, edges2_2);
+        System.out.println("Example 2: " + Arrays.toString(result2));
+        System.out.println("Expected: [3,6,6,6,6]");
+    }
+}
