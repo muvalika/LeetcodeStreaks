@@ -1,0 +1,122 @@
+Find closest node to given two nodes. 
+
+Given n1, n2, return the index of each node if minimised. 
+
+The lowest common "node".
+
+1. Performing DFS operation.
+2. Iterating the DFS node until the leaf node. 
+
+
+Algorithm:
+
+class Solution {
+int n=edges.length;
+int[]dost1=new int[n];
+int[]dist2=new int[n];
+Arrays.fill(dist2,-1);
+dist1[node1]=0;
+dist2[node2]=0;
+int dist=0;
+int i=node1;
+while(true){
+dist1[i]=dist++;
+i=edges[i];
+if(i==-1||dist1[i]!=-1){break;}
+}
+i=node2;
+dist=0;
+while(trie){
+dist2[i]=dist++;
+i=edges[i];
+if(i==-1;||dist2[i]!=-1){break;}
+}
+int ans=-1;
+int mini=Integer.Max_Value;
+for(int i=0;i<n;i++){
+if(dist1[i]==-1||dist2[i]==-1)continue;
+if(mini>Math.max(dist1[i], dist2[i]))}
+}
+
+Solution :
+import java.util.*;
+
+class Solution {
+    public int closestMeetingNode(int[] edges, int node1, int node2) {
+        int n = edges.length;
+        
+        // Get distances from node1 to all reachable nodes
+        Map<Integer, Integer> dist1 = getDistances(edges, node1);
+        
+        // Get distances from node2 to all reachable nodes
+        Map<Integer, Integer> dist2 = getDistances(edges, node2);
+        
+        int result = -1;
+        int minMaxDist = Integer.MAX_VALUE;
+        
+        // Find all nodes reachable from both node1 and node2
+        for (int node : dist1.keySet()) {
+            if (dist2.containsKey(node)) {
+                int maxDist = Math.max(dist1.get(node), dist2.get(node));
+                
+                // Update result if we found a better solution
+                if (maxDist < minMaxDist || (maxDist == minMaxDist && node < result)) {
+                    result = node;
+                    minMaxDist = maxDist;
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    private Map<Integer, Integer> getDistances(int[] edges, int start) {
+        Map<Integer, Integer> distances = new HashMap<>();
+        Set<Integer> visited = new HashSet<>();
+        
+        int current = start;
+        int distance = 0;
+        
+        // Follow the path until we reach a dead end or detect a cycle
+        while (current != -1 && !visited.contains(current)) {
+            distances.put(current, distance);
+            visited.add(current);
+            current = edges[current];
+            distance++;
+        }
+        
+        return distances;
+    }
+}
+
+// Test cases
+class TestClosestNode {
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Test Case 1
+        int[] edges1 = {2, 2, 3, -1};
+        int node1_1 = 0, node2_1 = 1;
+        System.out.println("Test 1: " + solution.closestMeetingNode(edges1, node1_1, node2_1)); 
+        // Expected: 2
+        
+        // Test Case 2  
+        int[] edges2 = {1, 2, -1};
+        int node1_2 = 0, node2_2 = 2;
+        System.out.println("Test 2: " + solution.closestMeetingNode(edges2, node1_2, node2_2));
+        // Expected: 2
+        
+        // Test Case 3 - No common reachable node
+        int[] edges3 = {1, -1, -1};
+        int node1_3 = 0, node2_3 = 2;
+        System.out.println("Test 3: " + solution.closestMeetingNode(edges3, node1_3, node2_3));
+        // Expected: -1
+        
+        // Test Case 4 - Cycle case
+        int[] edges4 = {1, 2, 0, 4, -1};
+        int node1_4 = 0, node2_4 = 3;
+        System.out.println("Test 4: " + solution.closestMeetingNode(edges4, node1_4, node2_4));
+        // Expected: 4
+    }
+}
+
