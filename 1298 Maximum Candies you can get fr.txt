@@ -1,0 +1,43 @@
+1298 Maximum Candies you can get from boxes:
+
+Given an integer 2D array[].
+
+Using keys and finding by returning the maximum candies. 
+
+Considering the examples:
+values of keys[i]=unique. 
+
+=> List of boxes you find inside the ith box. 
+
+Using BFS
+Breadth first search:
+
+Queue-pushing elements. 
+
+vector<vector<int>>& containBoxes, vector<int>& initialBoxes) {
+int n = stauts.size();
+vector<int> hashkey(n);
+queue<int> q;
+for(int i=0;i<initialBoxes.size();i++){
+q.push(initialBoxes[i]);
+}
+while(!q.empty()){
+int box=q.front();q.pop();
+if(status[bx] || hashKey[bx]){
+cnt+=candies[bx];
+for(auto b: containedBoxes[bx]){
+q.push(b);
+}
+for(auto k: keys[bx]){
+hashKey[K]=1;
+}
+}
+else{
+q.push(bx); timer++;
+}
+}
+if(timer>q.size())break;
+}
+return cnt;
+}
+};
