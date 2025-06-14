@@ -1,0 +1,43 @@
+public class Solution {
+    public int maxAdjacentDistance(int[] nums) {
+        int maxDiff = 0;
+        int n = nums.length;
+        
+        // Check differences between consecutive elements
+        for (int i = 0; i < n - 1; i++) {
+            int diff = Math.abs(nums[i] - nums[i + 1]);
+            maxDiff = Math.max(maxDiff, diff);
+        }
+        
+        // Check difference between last and first element (circular)
+        int circularDiff = Math.abs(nums[n - 1] - nums[0]);
+        maxDiff = Math.max(maxDiff, circularDiff);
+        
+        return maxDiff;
+    }
+    
+    // Test method
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        
+        // Test case 1
+        int[] nums1 = {1, 2, 4};
+        System.out.println("Input: [1, 2, 4]");
+        System.out.println("Output: " + solution.maxAdjacentDistance(nums1));
+        System.out.println("Expected: 3");
+        System.out.println();
+        
+        // Test case 2
+        int[] nums2 = {-5, -10, -5};
+        System.out.println("Input: [-5, -10, -5]");
+        System.out.println("Output: " + solution.maxAdjacentDistance(nums2));
+        System.out.println("Expected: 5");
+        System.out.println();
+        
+        // Additional test case
+        int[] nums3 = {10, 3, 7, 1};
+        System.out.println("Input: [10, 3, 7, 1]");
+        System.out.println("Output: " + solution.maxAdjacentDistance(nums3));
+        System.out.println("Explanation: Max diff is between 10 and 1 (circular): |10-1| = 9");
+    }
+}
